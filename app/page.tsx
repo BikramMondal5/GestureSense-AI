@@ -33,6 +33,7 @@ import {
 import { useTheme } from "next-themes"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useRouter } from "next/navigation"
 
 export default function LandingPage() {
   const { theme, setTheme } = useTheme()
@@ -43,6 +44,7 @@ export default function LandingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -331,6 +333,7 @@ export default function LandingPage() {
             <Button
               size="lg"
               className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+              onClick={() => router.push("/auth")}
             >
               <Play className="mr-2 h-5 w-5" />
               Sign up
