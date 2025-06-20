@@ -493,26 +493,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Built With</h2>
-          <p className="text-xl text-muted-foreground">Open-source ML frameworks and real-time computer vision tools</p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-6">
-          {techStack.map((tech, index) => (
-            <Badge
-              key={index}
-              variant="secondary"
-              className={`px-6 py-3 text-lg font-medium ${tech.color} text-white hover:scale-110 transition-transform duration-200`}
-            >
-              {tech.name}
-            </Badge>
-          ))}
-        </div>
-      </section>
-
       {/* GitHub & Documentation Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center space-y-8">
