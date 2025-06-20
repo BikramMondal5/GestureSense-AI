@@ -361,14 +361,14 @@ export default function LandingPage() {
               <p className="text-sm text-muted-foreground">Supported formats: .JPG, .PNG</p>
             </div>
 
-            {/* Camera Upload Component */}
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden">
+            {/* Camera Upload Component - Positioned to the right but shifted a bit to the left */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-12 lg:translate-x-16">
               <div
                 className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
                 onClick={triggerFileInput}
               >
-                {/* Dotted border overlay that appears on hover */}
-                <div className="absolute inset-3 border-4 border-dashed border-blue-400/0 rounded-lg transition-all duration-300 group-hover:border-blue-400/80 group-active:border-blue-500 group-active:scale-95"></div>
+                {/* Dotted border overlay that is always visible */}
+                <div className="absolute inset-3 border-4 border-dashed border-blue-400/80 rounded-lg transition-all duration-300 group-active:border-blue-500 group-active:scale-95"></div>
 
                 <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
                 <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
