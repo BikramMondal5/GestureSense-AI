@@ -41,6 +41,8 @@ export default function LandingPage() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState("")
 
   useEffect(() => {
     setMounted(true)
@@ -159,6 +161,38 @@ export default function LandingPage() {
     }
   }
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest('#profileBadge') && !target.closest('#profileDropdown')) {
+        setProfileDropdownOpen(false)
+      }
+    }
+    
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
+
+  // Add scroll effect to navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector('.glassmorphism-navbar') as HTMLElement
+      if (navbar) {
+        if (window.scrollY > 50) {
+          navbar.style.padding = '10px 20px'
+          navbar.style.background = 'rgba(147, 51, 234, 0.25)' // Lighter purple (bg-purple-600 with opacity)
+        } else {
+          navbar.style.padding = '15px 30px'
+          navbar.style.background = 'rgba(126, 34, 206, 0.20)' // Darker purple (bg-purple-700 with opacity)
+        }
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [mounted])
+
   if (!mounted) {
     return null
   }
@@ -167,31 +201,109 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background text-foreground">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-fuchsia-500/5 to-violet-500/5" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
       </div>
 
-      {/* Navigation */}
-      <nav className="relative z-10 flex justify-between items-center p-6 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl font-bold">GestureSense AI</span>
+      {/* Glassmorphism Navigation */}
+      <nav className="glassmorphism-navbar fixed top-5 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 flex justify-between items-center backdrop-blur-xl bg-gradient-to-r from-purple-700/20 via-fuchsia-600/20 to-purple-600/20 border border-purple-300/20 dark:border-purple-500/20 rounded-2xl shadow-lg shadow-purple-500/10 flex-wrap gap-3 p-4">
+        <div className="flex items-center gap-3 flex-1">
+          <a href="#" className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-white dark:bg-purple-900 rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-r from-purple-600 to-fuchsia-500 rounded-full"></div>
+            </div>
+            <span className="font-bold text-xl">GestureSense</span>
+          </a>
+          <span className="project-name text-sm font-medium hidden sm:inline-block ml-2">AI Dashboard</span>
+          <div className="search-bar relative ml-auto sm:ml-3 max-w-xs flex-1">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full px-10 py-2 rounded-full border border-purple-300/30 dark:border-purple-500/30 bg-white/10 dark:bg-purple-800/10 text-white dark:text-white placeholder:text-white/70 dark:placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:bg-white/15 dark:focus:bg-purple-900/15 transition-all"
+            />
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full"
+
+        <ul className="nav-links hidden md:flex items-center space-x-6 text-sm font-medium">
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-300 hover:after:w-full after:transition-all">Dashboard</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-300 hover:after:w-full after:transition-all">Features</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-300 hover:after:w-full after:transition-all">Use Cases</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-300 hover:after:w-full after:transition-all">Docs</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-300 hover:after:w-full after:transition-all">Community</a></li>
+        </ul>
+
+        <div className="profile-container relative">
+          <div 
+            id="profileBadge" 
+            className="flex items-center gap-2 px-3 py-2 bg-purple-500/15 dark:bg-purple-600/20 rounded-full cursor-pointer border border-purple-300/20 dark:border-purple-500/20 transition-all hover:bg-purple-500/25"
+            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+            <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500 flex items-center justify-center text-white text-xs font-bold">
+              AI
+            </div>
+            <span className="hidden sm:inline-block text-sm font-medium">Account</span>
+          </div>
+
+          <div id="profileDropdown" className={`${profileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-3'} absolute top-full right-0 mt-3 w-60 bg-gradient-to-br from-purple-600/20 to-fuchsia-600/20 dark:from-purple-900/80 dark:to-fuchsia-900/80 backdrop-blur-xl rounded-xl border border-purple-300/20 dark:border-purple-500/20 shadow-xl shadow-purple-500/10 transition-all duration-300 z-50 py-3`}>
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span className="text-sm">My Profile</span>
+            </a>
+            
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span className="text-sm">Settings</span>
+            </a>
+            
+            <a href="#" className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors">
+              <div className="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span className="text-sm">Notifications</span>
+              </div>
+              <span className="bg-purple-500/30 rounded-full px-2 py-0.5 text-xs">4</span>
+            </a>
+
+            <div className="border-t border-purple-500/20 my-2"></div>
+            
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              <span className="text-sm">Theme</span>
+            </a>
+
+            <div className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors">
+              <div className="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-moon"><path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <span className="text-sm">Dark Mode</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="rounded-full h-6 w-6 p-0 hover:bg-purple-500/20"
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
+            </div>
+
+            <div className="border-t border-purple-500/20 my-2"></div>
+
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-purple-500/10 dark:hover:bg-purple-700/20 transition-colors text-rose-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              <span className="text-sm font-medium">Log Out</span>
+            </a>
+          </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative z-10 text-center py-20 px-6 max-w-7xl mx-auto">
+      <section className="relative z-10 text-center py-20 px-6 max-w-7xl mx-auto mt-16">
         <div className="space-y-8">
           <Badge variant="secondary" className="px-4 py-2 text-sm">
             🚀 Now with Real-Time Emotion Detection
@@ -216,7 +328,7 @@ export default function LandingPage() {
               className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
             >
               <Play className="mr-2 h-5 w-5" />
-              Try Live Demo
+              Sign up
             </Button>
             <Button
               variant="outline"
@@ -252,7 +364,7 @@ export default function LandingPage() {
                 {/* Dotted border overlay that appears on hover */}
                 <div className="absolute inset-3 border-4 border-dashed border-blue-400/0 rounded-lg transition-all duration-300 group-hover:border-blue-400/80 group-active:border-blue-500 group-active:scale-95"></div>
 
-                <Camera className="h-20 w-20 text-white/80 animate-pulse group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
                 <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
                 <input
                   type="file"
