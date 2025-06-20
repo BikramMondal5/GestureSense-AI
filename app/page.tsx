@@ -228,10 +228,10 @@ export default function LandingPage() {
             </span>
             <input 
               type="text" 
-              placeholder="Search..." 
+              placeholder="Search anything" 
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full px-10 py-2 rounded-full border border-blue-300/30 dark:border-blue-500/30 bg-white/10 dark:bg-blue-800/10 text-white dark:text-white placeholder:text-white/70 dark:placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:bg-white/15 dark:focus:bg-blue-900/15 transition-all"
+              className="w-full px-10 py-2 rounded-full border border-blue-300/30 dark:border-blue-500/30 bg-white/10 dark:bg-blue-800/10 text-white dark:text-white placeholder:text-white/70 dark:placeholder:text-white/50 focus:outline-none focus:border-purple-500 focus:border-2 focus:bg-white/15 dark:focus:bg-blue-900/15 transition-all"
             />
           </div>
         </div>
