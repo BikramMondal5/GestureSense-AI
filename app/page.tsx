@@ -349,16 +349,23 @@ export default function LandingPage() {
 
         {/* Hero Animation Placeholder - Interactive Upload Section */}
         <div className="mt-16 relative h-auto">
+          {/* Added centered "Try a Quick Demo" heading above the section */}
+          <div className="text-center mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              Try a Quick Demo
+            </h2>
+          </div>
+          
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 max-w-5xl mx-auto">
             {/* Text Section */}
             <div className="md:w-1/2 text-left space-y-4">
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h3 className="text-3xl font-bold">
                 Experience GestureSense AI
               </h3>
               <p className="text-lg text-muted-foreground">
                 Upload your photo to see our cutting-edge AI in action — detecting gestures and emotions with precision.
               </p>
-              <p className="text-sm text-muted-foreground">Supported formats: .JPG, .PNG</p>
+              <p className="text-sm text-muted-foreground"><b>Supported formats:</b> .JPG, .PNG</p>
             </div>
 
             {/* Camera Upload Component - Positioned more to the right */}
@@ -388,7 +395,7 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Powerful Features</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Powerful Features</h2>
           <p className="text-xl text-muted-foreground">Advanced AI capabilities at your fingertips</p>
         </div>
 
@@ -415,7 +422,7 @@ export default function LandingPage() {
       {/* Live Demo Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">See It In Action</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">See It In Action</h2>
           <p className="text-xl text-muted-foreground">Watch GestureSense AI detect your mood & moves instantly</p>
         </div>
 
@@ -442,7 +449,7 @@ export default function LandingPage() {
       {/* Use Cases Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Use Cases</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Use Cases</h2>
           <p className="text-xl text-muted-foreground">Endless possibilities across industries</p>
         </div>
 
@@ -489,7 +496,7 @@ export default function LandingPage() {
       {/* Tech Stack Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Built With</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Built With</h2>
           <p className="text-xl text-muted-foreground">Open-source ML frameworks and real-time computer vision tools</p>
         </div>
 
@@ -509,7 +516,7 @@ export default function LandingPage() {
       {/* GitHub & Documentation Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold">Get Started</h2>
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Get Started</h2>
           <p className="text-xl text-muted-foreground">Explore the code and documentation</p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -538,7 +545,7 @@ export default function LandingPage() {
       {/* FAQ Section */}
       <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">FAQ</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">FAQ</h2>
           <p className="text-xl text-muted-foreground">Common questions about GestureSense AI</p>
         </div>
 
@@ -561,7 +568,7 @@ export default function LandingPage() {
       {/* Contact/Subscribe Section */}
       <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Stay Updated</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Stay Updated</h2>
           <p className="text-xl text-muted-foreground">Want updates on new gestures & features? Join our community.</p>
         </div>
 
