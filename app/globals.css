@@ -113,3 +113,22 @@ html {
     margin: 2rem auto;
   }
 }
+
+/* Override for auth modal to align right */
+.auth-modal-right {
+  left: auto !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* Override DialogContent to center inside right container */
+.auth-modal-inside {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+}
