@@ -361,8 +361,8 @@ export default function LandingPage() {
               <p className="text-sm text-muted-foreground">Supported formats: .JPG, .PNG</p>
             </div>
 
-            {/* Camera Upload Component - Positioned to the right but shifted a bit to the left */}
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-12 lg:translate-x-16">
+            {/* Camera Upload Component - Positioned more to the right */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-16 lg:translate-x-20">
               <div
                 className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
                 onClick={triggerFileInput}
