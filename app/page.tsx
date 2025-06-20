@@ -369,7 +369,7 @@ export default function LandingPage() {
             </div>
 
             {/* Camera Upload Component - Positioned more to the right */}
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-16 lg:translate-x-20">
+            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-96 h-72 md:w-96 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-16 lg:translate-x-20">
               <div
                 className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
                 onClick={triggerFileInput}
