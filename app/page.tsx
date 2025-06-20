@@ -76,27 +76,32 @@ export default function LandingPage() {
     {
       icon: Home,
       title: "Touchless Control",
-      description: "Smart device control",
+      description: "Control smart home devices, appliances, and interfaces with simple gestures - no physical contact required.",
     },
     {
       icon: MessageSquare,
       title: "Virtual Assistants",
-      description: "Emotion-aware AI",
+      description: "Create more intuitive AI assistants that respond to both verbal commands and non-verbal emotional cues.",
     },
     {
       icon: GraduationCap,
       title: "EdTech Analysis",
-      description: "Feedback analysis",
+      description: "Track student engagement and emotional responses during remote learning sessions for personalized teaching.",
     },
     {
       icon: Heart,
       title: "Healthcare Support",
-      description: "Diagnostic assistance",
+      description: "Enable hands-free interactions in sterile medical environments and assist patients with limited mobility.",
     },
     {
       icon: Accessibility,
       title: "Accessibility UI",
-      description: "Hands-free interfaces",
+      description: "Design inclusive interfaces for users with motor impairments, creating truly accessible technology.",
+    },
+    {
+      icon: Play,
+      title: "Gaming Interface",
+      description: "Create immersive gaming experiences with natural gesture controls that translate player movements into game actions.",
     },
   ]
 
@@ -336,7 +341,8 @@ export default function LandingPage() {
               className="px-8 py-6 text-lg rounded-full hover:bg-primary/10 transform hover:scale-105 transition-all duration-200"
             >
               <Github className="mr-2 h-5 w-5" />
-              View on GitHub
+              <a href="https://github.com/BikramMondal5/GestureSense-AI">View GitHub Repo</a>
+              <ExternalLink className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -435,38 +441,48 @@ export default function LandingPage() {
 
       {/* Use Cases Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Use Cases</h2>
           <p className="text-xl text-muted-foreground">Endless possibilities across industries</p>
         </div>
 
-        <div className="relative">
-          <div className="flex items-center justify-center space-x-8 overflow-hidden">
-            <Button variant="ghost" size="icon" onClick={prevUseCase} className="rounded-full hover:bg-primary/10">
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-
-            <div className="flex space-x-6 min-w-0">
-              {useCases.slice(currentUseCase, currentUseCase + 3).map((useCase, index) => (
-                <Card
-                  key={index}
-                  className="w-64 flex-shrink-0 hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm border-white/10"
-                >
-                  <CardHeader className="text-center">
-                    <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-3">
-                      <useCase.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{useCase.title}</CardTitle>
-                    <CardDescription>{useCase.description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-
-            <Button variant="ghost" size="icon" onClick={nextUseCase} className="rounded-full hover:bg-primary/10">
-              <ChevronRight className="h-6 w-6" />
-            </Button>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {useCases.slice(0, 3).map((useCase, index) => (
+            <Card
+              key={index}
+              className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <useCase.icon className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl">{useCase.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-center leading-relaxed">{useCase.description}</CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {/* Second row with remaining use cases */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+          {useCases.slice(3).map((useCase, index) => (
+            <Card
+              key={index + 3}
+              className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <useCase.icon className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl">{useCase.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-center leading-relaxed">{useCase.description}</CardDescription>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
@@ -503,7 +519,7 @@ export default function LandingPage() {
               className="px-8 py-6 text-lg rounded-full hover:bg-primary/10 transform hover:scale-105 transition-all duration-200"
             >
               <Github className="mr-2 h-5 w-5" />
-              View GitHub Repo
+              <a href="https://github.com/BikramMondal5/GestureSense-AI">View GitHub Repo</a>
               <ExternalLink className="ml-2 h-4 w-4" />
             </Button>
             <Button
@@ -578,7 +594,7 @@ export default function LandingPage() {
             <a href="#" className="hover:text-foreground transition-colors">
               About
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="https://github.com/BikramMondal5/GestureSense-AI" className="hover:text-foreground transition-colors">
               GitHub
             </a>
             <a href="#" className="hover:text-foreground transition-colors">
