@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -26,13 +26,21 @@ import {
   Moon,
   Mail,
   ExternalLink,
+  Upload,
+  Image as ImageIcon,
+  X,
 } from "lucide-react"
 import { useTheme } from "next-themes"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function LandingPage() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [currentUseCase, setCurrentUseCase] = useState(0)
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -130,6 +138,27 @@ export default function LandingPage() {
     setCurrentUseCase((prev) => (prev - 1 + useCases.length) % useCases.length)
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploading(true)
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string)
+        setUploading(false)
+      }
+
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   if (!mounted) {
     return null
   }
@@ -147,17 +176,18 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6 max-w-7xl mx-auto">
         <div className="flex items-center space-x-2">
-          <Camera className="h-8 w-8 text-primary" />
           <span className="text-2xl font-bold">GestureSense AI</span>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="rounded-full"
-        >
-          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </Button>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="rounded-full"
+          >
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </div>
       </nav>
 
       {/* Hero Section */}
@@ -199,14 +229,41 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Hero Animation Placeholder */}
-        <div className="mt-16 relative">
-          <div className="w-80 h-80 mx-auto bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10">
-            <div className="w-60 h-60 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-full flex items-center justify-center animate-pulse">
-              <Camera className="h-20 w-20 text-white/80" />
+        {/* Hero Animation Placeholder - Interactive Upload Section */}
+        <div className="mt-16 relative h-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 max-w-5xl mx-auto">
+            {/* Text Section */}
+            <div className="md:w-1/2 text-left space-y-4">
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Experience GestureSense AI
+              </h3>
+              <p className="text-lg text-muted-foreground">
+                Upload your photo to see our cutting-edge AI in action — detecting gestures and emotions with precision.
+              </p>
+              <p className="text-sm text-muted-foreground">Supported formats: .JPG, .PNG</p>
+            </div>
+
+            {/* Camera Upload Component */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-72 h-72 md:w-80 md:h-80 rounded-xl overflow-hidden">
+              <div
+                className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
+                onClick={triggerFileInput}
+              >
+                {/* Dotted border overlay that appears on hover */}
+                <div className="absolute inset-3 border-4 border-dashed border-blue-400/0 rounded-lg transition-all duration-300 group-hover:border-blue-400/80 group-active:border-blue-500 group-active:scale-95"></div>
+
+                <Camera className="h-20 w-20 text-white/80 animate-pulse group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                />
+              </div>
             </div>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse" />
         </div>
       </section>
 
