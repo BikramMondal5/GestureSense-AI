@@ -61,9 +61,12 @@ export default function AuthPage() {
         {/* Right: Modal section */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <div className="max-w-md w-full py-6">
-            <div className="text-center mb-5">
-              <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Authentication Portal
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold mb-3 flex flex-col items-center">
+                <span className="w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mb-3 rounded-full"></span>
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                  Authentication Portal
+                </span>
               </h2>
               <p className="text-muted-foreground text-sm">
                 Sign in to access your GestureSense AI dashboard and controls
