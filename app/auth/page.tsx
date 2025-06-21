@@ -34,12 +34,9 @@ export default function AuthPage() {
               </div>
               <span className="font-bold text-3xl">GestureSense AI</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Welcome Back
+            <h1 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent whitespace-nowrap">
+              Control your environment with a gesture, or a word
             </h1>
-            <p className="text-xl text-muted-foreground max-w-md mx-auto">
-              Sign in to access your GestureSense AI dashboard and controls
-            </p>
           </div>
 
           <div className="relative w-full max-w-lg aspect-square mb-8">
@@ -57,10 +54,6 @@ export default function AuthPage() {
           </div>
 
           <div className="text-center text-muted-foreground text-sm mt-auto">
-            <div className="flex items-center justify-center mb-2">
-              <Camera className="h-4 w-4 mr-1" />
-              <span>Powered by gesture recognition technology</span>
-            </div>
             <p>© 2025 GestureSense AI. All rights reserved.</p>
           </div>
         </div>
@@ -68,6 +61,14 @@ export default function AuthPage() {
         {/* Right: Modal section */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <div className="max-w-md w-full py-6">
+            <div className="text-center mb-5">
+              <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Authentication Portal
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Sign in to access your GestureSense AI dashboard and controls
+              </p>
+            </div>
             <AuthModal />
           </div>
         </div>
