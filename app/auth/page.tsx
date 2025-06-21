@@ -39,12 +39,12 @@ export default function AuthPage() {
             </h1>
           </div>
 
-          <div className="relative w-full max-w-lg aspect-square mb-8">
+          <div className="relative w-full max-w-md aspect-square mb-8">
             <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden flex items-center justify-center">
               <img
                 src="/placeholder.svg"
                 alt="GestureSense AI Illustration"
-                className="max-w-[80%] max-h-[80%] object-contain"
+                className="max-w-[75%] max-h-[70%] object-contain"
               />
             </div>
 
