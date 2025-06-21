@@ -3,6 +3,26 @@
 @tailwind utilities;
 
 @layer base {
+  /* Hide scrollbars on body and major layout containers, but not on elements with purple-scrollbar class */
+  body::-webkit-scrollbar,
+  div:not(.purple-scrollbar)::-webkit-scrollbar,
+  .min-h-screen::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For Firefox */
+  body,
+  div:not(.purple-scrollbar),
+  .min-h-screen {
+    scrollbar-width: none;
+  }
+
+  /* Make sure the page still scrolls even without visible scrollbars */
+  html,
+  body {
+    overflow-y: auto;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -131,4 +151,28 @@ html {
   bottom: auto !important;
   transform: none !important;
   margin: 0 auto !important;
+}
+
+/* Custom purple scrollbar */
+.purple-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 #f0f4f8;
+}
+
+.purple-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.purple-scrollbar::-webkit-scrollbar-track {
+  background: #f0f4f8;
+  border-radius: 6px;
+}
+
+.purple-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8b5cf6;
+  border-radius: 6px;
+}
+
+.purple-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #7c3aed;
 }

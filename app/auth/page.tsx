@@ -16,7 +16,7 @@ export default function AuthPage() {
       </div>
       {/* Right: Modal section */}
       <div className="w-1/2 flex items-center justify-center bg-white">
-        <div className="max-w-md w-full">
+        <div className="max-w-md w-full py-12">
           <AuthModal />
         </div>
       </div>
