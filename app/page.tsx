@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 import {
   Camera,
   Hand,
@@ -260,30 +261,30 @@ export default function LandingPage() {
           </div>
 
           <div id="profileDropdown" className={`${profileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-3'} absolute top-full right-0 mt-3 w-60 bg-gradient-to-br from-blue-600/20 to-sky-500/20 dark:from-blue-900/80 dark:to-sky-900/80 backdrop-blur-xl rounded-xl border border-blue-300/20 dark:border-blue-500/20 shadow-xl shadow-blue-500/10 transition-all duration-300 z-50 py-3`}>
-            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+            <div className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <span className="text-sm">My Profile</span>
-            </a>
+              <Link href="/profile" className="text-sm">My Profile</Link>
+            </div>
             
-            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+            <div className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
               <span className="text-sm">Settings</span>
-            </a>
+            </div>
             
-            <a href="#" className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+            <div className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
               <div className="flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                 <span className="text-sm">Notifications</span>
               </div>
               <span className="bg-blue-500/30 rounded-full px-2 py-0.5 text-xs">4</span>
-            </a>
+            </div>
 
             <div className="border-t border-blue-500/20 my-2"></div>
             
-            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+            <div className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
               <span className="text-sm">Theme</span>
-            </a>
+            </div>
 
             <div className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
               <div className="flex items-center gap-3">
@@ -302,10 +303,10 @@ export default function LandingPage() {
 
             <div className="border-t border-blue-500/20 my-2"></div>
 
-            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors text-rose-400">
+            <div className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors text-rose-400">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
               <span className="text-sm font-medium">Log Out</span>
-            </a>
+            </div>
           </div>
         </div>
       </nav>
