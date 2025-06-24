@@ -225,7 +225,7 @@ export default function LandingPage() {
           </a>
           <span className="project-name text-sm font-medium hidden sm:inline-block ml-2">AI Dashboard</span>
           <div className="search-bar relative ml-auto sm:ml-3 max-w-xs flex-1">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-white/70">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </span>
             <input 
@@ -233,7 +233,7 @@ export default function LandingPage() {
               placeholder="Search anything" 
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full px-10 py-2 rounded-full border border-blue-300/30 dark:border-blue-500/30 bg-white/10 dark:bg-blue-800/10 text-white dark:text-white placeholder:text-white/70 dark:placeholder:text-white/50 focus:outline-none focus:border-purple-500 focus:border-2 focus:bg-white/15 dark:focus:bg-blue-900/15 transition-all"
+              className="w-full px-10 py-2 rounded-full border-2 border-gray-300 dark:border-blue-500/70 bg-white/10 dark:bg-blue-800/10 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/50 focus:outline-none focus:border-purple-500 focus:border-2 focus:bg-white/15 dark:focus:bg-blue-900/15 transition-all"
             />
           </div>
         </div>
@@ -316,7 +316,7 @@ export default function LandingPage() {
             🚀 Now with Real-Time Emotion Detection
           </Badge>
 
-          <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent leading-tight">
             See Beyond the Screen
           </h1>
 
@@ -331,21 +331,18 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
-              size="lg"
-              className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-200"
+              className="btn-sign-up"
               onClick={() => router.push("/auth")}
             >
-              <Play className="mr-2 h-5 w-5" />
+              <Play className="h-5 w-5" />
               Sign up
             </Button>
             <Button
-              variant="outline"
-              size="lg"
-              className="px-8 py-6 text-lg rounded-full hover:bg-primary/10 transform hover:scale-105 transition-all duration-200"
+              className="btn-github-repo"
             >
-              <Github className="mr-2 h-5 w-5" />
+              <Github className="h-5 w-5 mr-2" />
               <a href="https://github.com/BikramMondal5/GestureSense-AI">View GitHub Repo</a>
-              <ExternalLink className="ml-2 h-4 w-4" />
+              <ExternalLink className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </div>
@@ -354,7 +351,7 @@ export default function LandingPage() {
         <div className="mt-16 relative h-auto">
           {/* Added centered "Try a Quick Demo" heading above the section */}
           <div className="text-center mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
               Try a Quick Demo
             </h2>
           </div>
@@ -398,7 +395,7 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Powerful Features</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">Powerful Features</h2>
           <p className="text-xl text-muted-foreground">Advanced AI capabilities at your fingertips</p>
         </div>
 
@@ -406,7 +403,7 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
+              className="group hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
             >
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -425,7 +422,7 @@ export default function LandingPage() {
       {/* Live Demo Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">See It In Action</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">See It In Action</h2>
           <p className="text-xl text-muted-foreground">Watch GestureSense AI detect your mood & moves instantly</p>
         </div>
 
@@ -452,7 +449,7 @@ export default function LandingPage() {
       {/* Use Cases Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Use Cases</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">Use Cases</h2>
           <p className="text-xl text-muted-foreground">Endless possibilities across industries</p>
         </div>
 
@@ -460,7 +457,7 @@ export default function LandingPage() {
           {useCases.slice(0, 3).map((useCase, index) => (
             <Card
               key={index}
-              className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
+              className="group hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
             >
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -480,7 +477,7 @@ export default function LandingPage() {
           {useCases.slice(3).map((useCase, index) => (
             <Card
               key={index + 3}
-              className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
+              className="group hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 bg-card/50 backdrop-blur-sm border-white/10"
             >
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -499,7 +496,7 @@ export default function LandingPage() {
       {/* GitHub & Documentation Section */}
       <section className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Get Started</h2>
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">Get Started</h2>
           <p className="text-xl text-muted-foreground">Explore the code and documentation</p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -528,7 +525,7 @@ export default function LandingPage() {
       {/* FAQ Section */}
       <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">FAQ</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">FAQ</h2>
           <p className="text-xl text-muted-foreground">Common questions about GestureSense AI</p>
         </div>
 
@@ -551,7 +548,7 @@ export default function LandingPage() {
       {/* Contact/Subscribe Section */}
       <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Stay Updated</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">Stay Updated</h2>
           <p className="text-xl text-muted-foreground">Want updates on new gestures & features? Join our community.</p>
         </div>
 

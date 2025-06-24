@@ -18,6 +18,10 @@ import {
   Bell,
   Volume2,
   RotateCcw,
+  Sun,
+  Moon,
+  ExternalLink,
+  Github,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,6 +29,8 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Progress } from "@/components/ui/progress"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { Input } from "@/components/ui/input"
+import { useTheme } from "next-themes"
 
 // Speech recognition interface for TypeScript
 interface SpeechRecognition extends EventTarget {
@@ -100,6 +106,7 @@ interface DetectionHistory {
 }
 
 export default function Dashboard() {
+  const { theme, setTheme } = useTheme()
   const [isLiveDetection, setIsLiveDetection] = useState(false)
   const [cameraEnabled, setCameraEnabled] = useState(false)
   const [micEnabled, setMicEnabled] = useState(false)
@@ -113,10 +120,17 @@ export default function Dashboard() {
   const [isListening, setIsListening] = useState(false)
   const [speechConfidence, setSpeechConfidence] = useState(0)
   const [recognitionError, setRecognitionError] = useState("")
+  const [mounted, setMounted] = useState(false)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState("")
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const speechTimeoutRef = useRef<NodeJS.Timeout>()
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Initialization of speech recognition
   useEffect(() => {
@@ -300,46 +314,145 @@ export default function Dashboard() {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   }
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest('#profileBadge') && !target.closest('#profileDropdown')) {
+        setProfileDropdownOpen(false)
+      }
+    }
+    
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
+
+  // Add scroll effect to navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector('.glassmorphism-navbar') as HTMLElement
+      if (navbar) {
+        if (window.scrollY > 50) {
+          navbar.style.padding = '10px 20px'
+          navbar.style.background = 'rgba(59, 130, 246, 0.25)' // Lighter blue (bg-blue-500 with opacity)
+        } else {
+          navbar.style.padding = '15px 30px'
+          navbar.style.background = 'rgba(37, 99, 235, 0.20)' // Darker blue (bg-blue-600 with opacity)
+        }
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [mounted])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Navigation */}
-      <nav className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                GestureSense AI
-              </div>
-              <div className="hidden md:flex space-x-6">
-                <a href="#" className="text-blue-400 font-medium">
-                  AI Dashboard
-                </a>
-                <a href="/" className="text-gray-300 hover:text-white transition-colors">
-                  Home
-                </a>
-                <a href="/#features" className="text-gray-300 hover:text-white transition-colors">
-                  Features
-                </a>
-                <a href="/#use-cases" className="text-gray-300 hover:text-white transition-colors">
-                  Use Cases
-                </a>
-              </div>
+      {/* Glassmorphism Navigation */}
+      <nav className="glassmorphism-navbar fixed top-5 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 flex justify-between items-center backdrop-blur-xl bg-gradient-to-r from-blue-600/20 via-sky-500/20 to-blue-500/20 border border-blue-300/20 dark:border-blue-500/20 rounded-2xl shadow-lg shadow-blue-500/10 flex-wrap gap-3 p-4">
+        <div className="flex items-center gap-3 flex-1">
+          <a href="#" className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-white dark:bg-blue-900 rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-sky-400 rounded-full"></div>
             </div>
-            <a href="/auth">
-              <Button variant="outline" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
-                Account
+            <span className="font-bold text-xl">GestureSense</span>
+          </a>
+          <span className="project-name text-sm font-medium hidden sm:inline-block ml-2">AI Dashboard</span>
+          <div className="search-bar relative ml-auto sm:ml-3 max-w-xs flex-1">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search anything" 
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full px-10 py-2 rounded-full border border-blue-300/30 dark:border-blue-500/30 bg-white/10 dark:bg-blue-800/10 text-white dark:text-white placeholder:text-white/70 dark:placeholder:text-white/50 focus:outline-none focus:border-purple-500 focus:border-2 focus:bg-white/15 dark:focus:bg-blue-900/15 transition-all"
+            />
+          </div>
+        </div>
+
+        <ul className="nav-links hidden md:flex items-center space-x-6 text-sm font-medium">
+          <li><a href="/dashboard" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-300 after:transition-all">Dashboard</a></li>
+          <li><a href="/#features" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Features</a></li>
+          <li><a href="/#use-cases" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Use Cases</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Docs</a></li>
+          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Community</a></li>
+        </ul>
+
+        <div className="profile-container relative">
+          <div 
+            id="profileBadge" 
+            className="flex items-center gap-2 px-3 py-2 bg-blue-500/15 dark:bg-blue-600/20 rounded-full cursor-pointer border border-blue-300/20 dark:border-blue-500/20 transition-all hover:bg-blue-500/25"
+            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          >
+            <div className="w-7 h-7 rounded-full bg-gradient-to-r from-blue-600 to-sky-400 flex items-center justify-center text-white text-xs font-bold">
+              AI
+            </div>
+            <span className="hidden sm:inline-block text-sm font-medium">Account</span>
+          </div>
+
+          <div id="profileDropdown" className={`${profileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-3'} absolute top-full right-0 mt-3 w-60 bg-gradient-to-br from-blue-600/20 to-sky-500/20 dark:from-blue-900/80 dark:to-sky-900/80 backdrop-blur-xl rounded-xl border border-blue-300/20 dark:border-blue-500/20 shadow-xl shadow-blue-500/10 transition-all duration-300 z-50 py-3`}>
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span className="text-sm">My Profile</span>
+            </a>
+            
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span className="text-sm">Settings</span>
+            </a>
+            
+            <a href="#" className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+              <div className="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span className="text-sm">Notifications</span>
+              </div>
+              <span className="bg-blue-500/30 rounded-full px-2 py-0.5 text-xs">4</span>
+            </a>
+
+            <div className="border-t border-blue-500/20 my-2"></div>
+            
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              <span className="text-sm">Theme</span>
+            </a>
+
+            <div className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors">
+              <div className="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-moon"><path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <span className="text-sm">Dark Mode</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="rounded-full h-6 w-6 p-0 hover:bg-blue-500/20"
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
+            </div>
+
+            <div className="border-t border-blue-500/20 my-2"></div>
+
+            <a href="#" className="flex items-center gap-3 px-4 py-2 hover:bg-blue-500/10 dark:hover:bg-blue-700/20 transition-colors text-rose-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              <span className="text-sm font-medium">Log Out</span>
             </a>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-28">
         {/* Welcome Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             👋 Welcome back,{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">User</span>
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Bikram</span>
           </h1>
           <p className="text-xl text-gray-300 mb-2">
             Explore gestures, emotions, and voice insights — all in real time.
@@ -350,7 +463,7 @@ export default function Dashboard() {
             onClick={isLiveDetection ? stopLiveDetection : startLiveDetection}
             className={`text-lg px-8 py-4 rounded-full transition-all duration-300 ${
               isLiveDetection
-                ? "bg-red-500 hover:bg-red-600 animate-pulse"
+                ? "bg-red-500 hover:bg-red-600"
                 : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105"
             }`}
           >
@@ -641,7 +754,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-
+      
       {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 flex flex-col space-y-4">
         <Button

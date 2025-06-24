@@ -78,6 +78,15 @@
   }
 }
 
+/* Custom button styles for Sign Up and GitHub Repo buttons */
+.btn-sign-up {
+  @apply px-8 py-2 text-base font-medium rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center justify-center gap-2;
+}
+
+.btn-github-repo {
+  @apply px-8 py-2 text-base font-medium rounded-full bg-transparent border border-gray-700 backdrop-blur-md text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2;
+}
+
 /* Custom animations */
 @keyframes float {
   0%,
