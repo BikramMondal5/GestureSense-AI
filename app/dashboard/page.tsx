@@ -461,7 +461,7 @@ export default function Dashboard() {
 
           <Button
             onClick={isLiveDetection ? stopLiveDetection : startLiveDetection}
-            className={`text-lg px-8 py-4 rounded-full transition-all duration-300 ${
+            className={`text-lg px-6 py-6 rounded-full transition-all duration-300 ${
               isLiveDetection
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105"
@@ -474,7 +474,7 @@ export default function Dashboard() {
               </>
             ) : (
               <>
-                <Play className="mr-2 h-5 w-5" />🔴 Start Live Detection
+                🔴 Start Live Detection
               </>
             )}
           </Button>
@@ -582,7 +582,7 @@ export default function Dashboard() {
           <Card className="bg-black/40 border-blue-500/30 backdrop-blur-sm hover:border-blue-500/50 transition-all duration-300">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <Hand className="mr-2 h-5 w-5 text-blue-400" />🤚 Detected Gesture
+                <Hand className="mr-2 h-5 w-5 text-blue-400" />Detected Gesture
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -608,7 +608,7 @@ export default function Dashboard() {
           <Card className="bg-black/40 border-purple-500/30 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <Smile className="mr-2 h-5 w-5 text-purple-400" />😀 Detected Emotion
+                <Smile className="mr-2 h-5 w-5 text-purple-400" />Detected Emotion
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -639,7 +639,7 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <MessageSquare className="mr-2 h-5 w-5 text-green-400" />
-                🗣️ Detected Speech
+                Detected Speech
               </CardTitle>
             </CardHeader>
             <CardContent>

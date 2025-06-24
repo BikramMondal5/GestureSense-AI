@@ -27,8 +27,9 @@ import {
   Mail,
   ExternalLink,
   Upload,
-  Image as ImageIcon,
   X,
+  Send,
+  Loader2
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
@@ -366,6 +367,25 @@ export default function LandingPage() {
                 Upload your photo to see our cutting-edge AI in action — detecting gestures and emotions with precision.
               </p>
               <p className="text-sm text-muted-foreground"><b>Supported formats:</b> .JPG, .PNG</p>
+              
+              {/* Send button - moved here to be visible as per the screenshot */}
+              {uploadedImage && (
+                <div className="mt-4 flex">
+                  <Button
+                    onClick={() => {}}
+                    className="px-6 py-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 transition-all flex items-center gap-2"
+                  >
+                    {uploading ? (
+                      <Loader2 className="animate-spin h-5 w-5" />
+                    ) : (
+                      <>
+                        <Send className="h-5 w-5" />
+                        Analyze Image
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Camera Upload Component - Positioned more to the right */}
@@ -377,8 +397,13 @@ export default function LandingPage() {
                 {/* Dotted border overlay that is always visible */}
                 <div className="absolute inset-3 border-4 border-dashed border-blue-400/80 rounded-lg transition-all duration-300 group-active:border-blue-500 group-active:scale-95"></div>
 
-                <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
-                <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
+                {/* Show camera icon only when no image is uploaded */}
+                {!uploadedImage && (
+                  <>
+                    <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                    <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
+                  </>
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -386,7 +411,23 @@ export default function LandingPage() {
                   onChange={handleImageUpload}
                   accept="image/*"
                 />
+
+                {/* Image preview - always visible, shows uploaded image or prompt to upload */}
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  {uploadedImage ? (
+                    <img
+                      src={uploadedImage}
+                      alt="Uploaded"
+                      className="w-full h-full object-cover rounded-lg shadow-md"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center p-4">
+                    </div>
+                  )}
+                </div>
               </div>
+              
+              {/* Removing the button from here as it's now positioned in the text section */}
             </div>
           </div>
         </div>
