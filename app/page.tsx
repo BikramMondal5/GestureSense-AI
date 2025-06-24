@@ -389,45 +389,31 @@ export default function LandingPage() {
             </div>
 
             {/* Camera Upload Component - Positioned more to the right */}
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md shadow-lg w-96 h-72 md:w-96 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-16 lg:translate-x-20">
-              <div
-                className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
-                onClick={triggerFileInput}
-              >
-                {/* Dotted border overlay that is always visible */}
-                <div className="absolute inset-3 border-4 border-dashed border-blue-400/80 rounded-lg transition-all duration-300 group-active:border-blue-500 group-active:scale-95"></div>
-
-                {/* Show camera icon only when no image is uploaded */}
-                {!uploadedImage && (
-                  <>
-                    <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
-                    <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
-                  </>
-                )}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                />
-
-                {/* Image preview - always visible, shows uploaded image or prompt to upload */}
-                <div className="absolute inset-0 flex items-center justify-center p-4">
-                  {uploadedImage ? (
-                    <img
-                      src={uploadedImage}
-                      alt="Uploaded"
-                      className="w-full h-full object-cover rounded-lg shadow-md"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center p-4">
-                    </div>
-                  )}
+            <div className={`${uploadedImage ? "bg-transparent" : "bg-gradient-to-br from-blue-500/20 to-purple-500/20"} border border-white/10 backdrop-blur-md shadow-lg w-96 h-72 md:w-96 md:h-80 rounded-xl overflow-hidden md:ml-auto md:mr-0 md:translate-x-16 lg:translate-x-20`}>
+              {!uploadedImage ? (
+                <div
+                  className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 cursor-pointer flex flex-col items-center justify-center relative group"
+                  onClick={triggerFileInput}
+                >
+                  <div className="absolute inset-3 border-4 border-dashed border-blue-400/80 rounded-lg transition-all duration-300 group-active:border-blue-500 group-active:scale-95"></div>
+                  <Camera className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                  <p className="text-white/80 text-center text-sm mt-4 group-hover:text-white transition-all duration-300">Click to upload an image</p>
                 </div>
-              </div>
-              
-              {/* Removing the button from here as it's now positioned in the text section */}
+              ) : (
+                <img
+                  src={uploadedImage}
+                  alt="Uploaded"
+                  className="w-full h-full object-contain cursor-pointer border border-blue-400/20 rounded-lg"
+                  onClick={triggerFileInput}
+                />
+              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleImageUpload}
+                accept="image/*"
+              />
             </div>
           </div>
         </div>

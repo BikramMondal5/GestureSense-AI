@@ -124,9 +124,19 @@ export default function Dashboard() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
+  // New state variables for file upload
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [isAnalyzingImage, setIsAnalyzingImage] = useState(false)
+  const [imageDetectionResults, setImageDetectionResults] = useState<{
+    gesture?: typeof mockGestures[0],
+    emotion?: typeof mockEmotions[0]
+  } | null>(null)
+
   const videoRef = useRef<HTMLVideoElement>(null)
   const speechTimeoutRef = useRef<NodeJS.Timeout>()
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -345,6 +355,75 @@ export default function Dashboard() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [mounted])
+
+  // Add file upload handler
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Handle file selection
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (PNG, JPG, etc.)');
+      return;
+    }
+    
+    // Create URL for preview
+    const imageUrl = URL.createObjectURL(file);
+    setUploadedImage(imageUrl);
+    setIsUploadModalOpen(true);
+    
+    // Simulate image analysis
+    setIsAnalyzingImage(true);
+    setTimeout(() => {
+      // Choose random gesture and emotion for the simulated result
+      const randomGesture = mockGestures[Math.floor(Math.random() * mockGestures.length)];
+      const randomEmotion = mockEmotions[Math.floor(Math.random() * mockEmotions.length)];
+      
+      setImageDetectionResults({
+        gesture: randomGesture,
+        emotion: randomEmotion
+      });
+      
+      // Add to history
+      const gestureHistoryItem: DetectionHistory = {
+        id: `upload-gesture-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: "gesture",
+        content: randomGesture.name,
+        confidence: randomGesture.confidence,
+        timestamp: new Date(),
+      };
+      
+      const emotionHistoryItem: DetectionHistory = {
+        id: `upload-emotion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: "emotion",
+        content: randomEmotion.name,
+        confidence: randomEmotion.confidence,
+        timestamp: new Date(),
+      };
+      
+      setDetectionHistory((prev) => [gestureHistoryItem, emotionHistoryItem, ...prev.slice(0, 3)]);
+      setIsAnalyzingImage(false);
+    }, 2000); // Simulate processing time
+  };
+
+  // Clean up object URL when component unmounts or when modal is closed
+  const cleanupUploadedImage = () => {
+    if (uploadedImage) {
+      URL.revokeObjectURL(uploadedImage);
+      setUploadedImage(null);
+      setImageDetectionResults(null);
+    }
+  };
+
+  const closeUploadModal = () => {
+    setIsUploadModalOpen(false);
+    cleanupUploadedImage();
+  };
 
   if (!mounted) {
     return null
@@ -760,6 +839,7 @@ export default function Dashboard() {
         <Button
           size="lg"
           className="rounded-full w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300"
+          onClick={handleUploadClick}
         >
           <Upload className="h-6 w-6" />
         </Button>
@@ -769,7 +849,88 @@ export default function Dashboard() {
         >
           <HelpCircle className="h-6 w-6" />
         </Button>
+
+        {/* Hidden file input for upload */}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
+
+      {/* Upload Image Analysis Modal */}
+      {isUploadModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black opacity-50" onClick={closeUploadModal}></div>
+          <Card className="relative max-w-lg w-full mx-4 sm:mx-auto bg-black/80 border border-purple-500/30 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Upload className="mr-2 h-5 w-5 text-purple-400" />
+                Image Analysis Results
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isAnalyzingImage ? (
+                <div className="py-6 text-center">
+                  {uploadedImage && (
+                    <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden border-2 border-purple-500/50">
+                      <img src={uploadedImage} alt="Uploaded image" className="w-full h-full object-contain bg-black" />
+                      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                        <div className="text-center px-4">
+                          <p className="text-white font-medium mb-3">Analyzing image...</p>
+                          <div className="flex justify-center space-x-2">
+                            <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                            <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                            <div className="w-3 h-3 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-gray-400">Processing your image to detect gestures and emotions...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {uploadedImage && (
+                    <div className="w-full aspect-video mb-6 rounded-lg overflow-hidden border-2 border-purple-500/50">
+                      <img src={uploadedImage} alt="Uploaded image" className="w-full h-full object-contain bg-black" />
+                    </div>
+                  )}
+
+                  {imageDetectionResults?.gesture && (
+                    <div className="text-center">
+                      <div className="text-6xl mb-2">{imageDetectionResults.gesture.emoji}</div>
+                      <h3 className="text-2xl font-bold text-white mb-1">{imageDetectionResults.gesture.name}</h3>
+                      <Progress value={imageDetectionResults.gesture.confidence} className="h-2" />
+                      <p className="text-sm text-gray-400">Confidence: {imageDetectionResults.gesture.confidence}%</p>
+                    </div>
+                  )}
+
+                  {imageDetectionResults?.emotion && (
+                    <div className="text-center">
+                      <div className="text-6xl mb-2">{imageDetectionResults.emotion.emoji}</div>
+                      <h3 className="text-2xl font-bold text-white mb-1">{imageDetectionResults.emotion.name}</h3>
+                      <Progress value={imageDetectionResults.emotion.confidence} className="h-2" />
+                      <p className="text-sm text-gray-400">Confidence: {imageDetectionResults.emotion.confidence}%</p>
+                    </div>
+                  )}
+
+                  <div className="mt-4">
+                    <Button
+                      onClick={closeUploadModal}
+                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
