@@ -24,6 +24,52 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Progress } from "@/components/ui/progress"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+
+// Speech recognition interface for TypeScript
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onstart: (event: Event) => void;
+  onend: (event: Event) => void;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition;
+}
 
 // Mock data for demonstrations
 const mockGestures = [
@@ -44,14 +90,6 @@ const mockEmotions = [
   { emoji: "😴", name: "Tired", confidence: 80 },
 ]
 
-const mockSpeechPhrases = [
-  "Hello, how are you today?",
-  "Turn on the lights please",
-  "I need help with this task",
-  "Thank you for your assistance",
-  "Can you show me the weather?",
-  "Play my favorite music",
-]
 
 interface DetectionHistory {
   id: string
@@ -72,11 +110,112 @@ export default function Dashboard() {
   const [speechText, setSpeechText] = useState("")
   const [detectionHistory, setDetectionHistory] = useState<DetectionHistory[]>([])
   const [moodScore, setMoodScore] = useState(75)
+  const [isListening, setIsListening] = useState(false)
+  const [speechConfidence, setSpeechConfidence] = useState(0)
+  const [recognitionError, setRecognitionError] = useState("")
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const speechTimeoutRef = useRef<NodeJS.Timeout>()
+  const recognitionRef = useRef<SpeechRecognition | null>(null)
 
-  // Simulate real-time detection updates
+  // Initialization of speech recognition
+  useEffect(() => {
+    // Check browser compatibility for speech recognition
+    const SpeechRecognition = (window as any).SpeechRecognition || 
+                             (window as any).webkitSpeechRecognition ||
+                             null;
+    
+    if (SpeechRecognition && !recognitionRef.current) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+      
+      // Handle speech recognition results
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        
+        // Get confidence from the last result
+        if (event.results.length > 0) {
+          const lastResultIndex = event.results.length - 1;
+          const confidence = Math.round(event.results[lastResultIndex][0].confidence * 100);
+          setSpeechConfidence(confidence);
+        }
+        
+        setSpeechText(transcript);
+        
+        // If result is final, add to history
+        if (event.results[event.results.length - 1].isFinal) {
+          const historyItem: DetectionHistory = {
+            id: `speech-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            type: "speech",
+            content: transcript,
+            confidence: speechConfidence,
+            timestamp: new Date(),
+          }
+          setDetectionHistory((prev) => [historyItem, ...prev.slice(0, 4)]);
+          
+          // Reset transcript after short delay
+          if (speechTimeoutRef.current) {
+            clearTimeout(speechTimeoutRef.current);
+          }
+          speechTimeoutRef.current = setTimeout(() => {
+            setSpeechText("");
+          }, 5000);
+        }
+      };
+      
+      // Handle speech recognition errors
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event);
+        setRecognitionError(event.error);
+        setIsListening(false);
+      };
+      
+      // Recognition has ended
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+    };
+  }, []);
+
+  // Handle toggling the microphone
+  const toggleMicrophone = async () => {
+    if (!recognitionRef.current) {
+      console.error("Speech recognition not supported in this browser");
+      return;
+    }
+    
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      setMicEnabled(false);
+    } else {
+      try {
+        // Request microphone permission
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Start recognition
+        recognitionRef.current.start();
+        setIsListening(true);
+        setMicEnabled(true);
+        setRecognitionError("");
+      } catch (error) {
+        console.error("Error accessing microphone", error);
+        setRecognitionError("Microphone access denied");
+      }
+    }
+  };
+
+  // Simulate real-time detection updates for gestures and emotions
   useEffect(() => {
     if (!isLiveDetection) return
 
@@ -116,51 +255,19 @@ export default function Dashboard() {
     return () => clearInterval(interval)
   }, [isLiveDetection, gesturesEnabled, emotionsEnabled])
 
-  // Simulate speech recognition
-  useEffect(() => {
-    if (!isLiveDetection || !micEnabled) return
-
-    const speechInterval = setInterval(() => {
-      const randomPhrase = mockSpeechPhrases[Math.floor(Math.random() * mockSpeechPhrases.length)]
-      setSpeechText(randomPhrase)
-
-      // Add to history with truly unique ID
-      const historyItem: DetectionHistory = {
-        id: `speech-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        type: "speech",
-        content: randomPhrase,
-        timestamp: new Date(),
-      }
-      setDetectionHistory((prev) => [historyItem, ...prev.slice(0, 4)])
-
-      // Clear speech text after 5 seconds
-      if (speechTimeoutRef.current) {
-        clearTimeout(speechTimeoutRef.current)
-      }
-      speechTimeoutRef.current = setTimeout(() => {
-        setSpeechText("")
-      }, 5000)
-    }, 7000)
-
-    return () => {
-      clearInterval(speechInterval)
-      if (speechTimeoutRef.current) {
-        clearTimeout(speechTimeoutRef.current)
-      }
-    }
-  }, [isLiveDetection, micEnabled])
-
   const startLiveDetection = async () => {
     setIsLiveDetection(true)
     setCameraEnabled(true)
-    setMicEnabled(true)
+    
+    // Don't automatically enable microphone - user will toggle it separately
+    // setMicEnabled(true)
 
     // Simulate camera access
     if (videoRef.current) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: true,
+          audio: false, // Don't request audio here - we'll do it separately
         })
         videoRef.current.srcObject = stream
       } catch (error) {
@@ -172,8 +279,15 @@ export default function Dashboard() {
   const stopLiveDetection = () => {
     setIsLiveDetection(false)
     setCameraEnabled(false)
+    
+    // Stop the microphone if it's enabled
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    
     setMicEnabled(false)
     setSpeechText("")
+    setIsListening(false)
 
     if (videoRef.current?.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream
@@ -275,17 +389,36 @@ export default function Dashboard() {
                   <span className="text-sm text-gray-300">Camera</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setMicEnabled(!micEnabled)}
-                    className={`${micEnabled ? "bg-green-500/20 border-green-500" : "bg-red-500/20 border-red-500"}`}
-                  >
-                    {micEnabled ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-                  </Button>
-                  <span className="text-sm text-gray-300">Mic</span>
-                </div>
+                <HoverCard>
+                  <HoverCardTrigger>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleMicrophone}
+                        className={`${isListening ? "bg-green-500/20 border-green-500 animate-pulse" : "bg-red-500/20 border-red-500"}`}
+                      >
+                        {isListening ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
+                      </Button>
+                      <span className="text-sm text-gray-300">Mic</span>
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold">Speech Recognition</h4>
+                      <p className="text-xs text-muted-foreground">
+                        {isListening 
+                          ? "Currently listening for speech. Click to stop." 
+                          : "Click to enable real-time speech recognition."}
+                      </p>
+                      {recognitionError && (
+                        <div className="p-2 bg-red-500/20 border border-red-500/50 rounded text-xs">
+                          Error: {recognitionError}
+                        </div>
+                      )}
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
 
                 <div className="flex items-center space-x-2">
                   <Switch checked={gesturesEnabled} onCheckedChange={setGesturesEnabled} />
@@ -397,7 +530,7 @@ export default function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {isLiveDetection && micEnabled ? (
+              {isListening ? (
                 <div className="min-h-[200px] flex flex-col">
                   <div className="flex-1 bg-gray-800/50 rounded-lg p-4 mb-4">
                     {speechText ? (
@@ -406,22 +539,31 @@ export default function Dashboard() {
                       <p className="text-gray-500 italic">Listening for speech...</p>
                     )}
                   </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <div
-                      className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
-                      style={{ animationDelay: "0.4s" }}
-                    ></div>
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <div
+                        className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                        style={{ animationDelay: "0.4s" }}
+                      ></div>
+                    </div>
+                    {speechConfidence > 0 && (
+                      <div className="w-full space-y-1">
+                        <Progress value={speechConfidence} className="h-1" />
+                        <p className="text-xs text-gray-400 text-center">Confidence: {speechConfidence}%</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
                 <div className="text-center text-gray-500 py-8">
                   <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>Speech recognition disabled</p>
+                  <p className="text-sm mt-2">Click the mic button to enable</p>
                 </div>
               )}
             </CardContent>
