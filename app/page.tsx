@@ -239,9 +239,9 @@ export default function LandingPage() {
         </div>
 
         <ul className="nav-links hidden md:flex items-center space-x-6 text-sm font-medium">
-          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Dashboard</a></li>
-          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Features</a></li>
-          <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Use Cases</a></li>
+          <li><a href="/dashboard" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Dashboard</a></li>
+          <li><a href="#features" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Features</a></li>
+          <li><a href="#use-cases" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Use Cases</a></li>
           <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Docs</a></li>
           <li><a href="#" className="hover:opacity-80 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-300 hover:after:w-full after:transition-all">Community</a></li>
         </ul>
