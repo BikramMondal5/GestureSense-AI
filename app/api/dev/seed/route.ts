@@ -9,20 +9,31 @@ export async function POST() {
   }
 
   try {
+    // First check if user already exists
+    const existingUser = await userService.getUserByEmail('default@example.com')
+    if (existingUser) {
+      // Return the existing user instead of treating it as an error
+      return NextResponse.json(existingUser)
+    }
+
+    // Create new user if one doesn't exist
     const defaultUser = await userService.createUser({
       email: 'default@example.com',
       password: 'default-password',
       name: 'Default User',
+      role: 'user',
       bio: 'This is a default user for development',
       avatar: '/placeholder-user.jpg',
     })
 
-    // Store the user ID in env for development
-    process.env.NEXT_PUBLIC_DEFAULT_USER_ID = defaultUser.id
-
     return NextResponse.json(defaultUser)
   } catch (error: any) {
     console.error('Seed error:', error)
-    return NextResponse.json({ error: 'Failed to seed database' }, { status: 500 })
+    // Include the full error details in development
+    const errorMessage =
+      process.env.NODE_ENV === 'development'
+        ? `${error.message}\n${error.stack}`
+        : 'Failed to seed database'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

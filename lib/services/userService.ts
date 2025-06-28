@@ -1,10 +1,12 @@
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/db"
 import { hash, compare } from 'bcrypt'
+import { type Prisma, type User, type UserPreferences, type UserSecurity } from '@prisma/client'
 
 export type CreateUserData = {
   email: string
   password: string
   name?: string
+  role?: string
   avatar?: string
   bio?: string
   location?: string
@@ -28,12 +30,7 @@ export type UpdateUserData = Partial<CreateUserData> & {
   }
   security?: {
     twoFactorEnabled?: boolean
-    sessions?: Array<{
-      device: string
-      browser: string
-      date: string
-      isActive: boolean
-    }>
+    lastPasswordChange?: string
   }
 }
 
@@ -41,13 +38,12 @@ export class UserService {
   async createUser(data: CreateUserData) {
     const hashedPassword = await hash(data.password, 10)
     
-    const user = await db.user.create({
+    const user = await prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,
         preferences: {
           create: {
-            theme: 'system',
             notifications: true,
             handGestureDetection: true,
             facialEmotionRecognition: true,
@@ -61,8 +57,10 @@ export class UserService {
         security: {
           create: {
             twoFactorEnabled: false,
-            lastPasswordChange: new Date().toISOString(),
-            sessions: []
+            lastPasswordChange: new Date(),
+            sessions: {
+              create: []
+            }
           }
         }
       },
@@ -76,15 +74,11 @@ export class UserService {
   }
 
   async getUserById(id: string) {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
       include: {
         preferences: true,
-        security: {
-          include: {
-            sessions: true
-          }
-        }
+        security: true
       }
     })
 
@@ -93,7 +87,7 @@ export class UserService {
   }
 
   async getUserByEmail(email: string) {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
       include: {
         preferences: true,
@@ -102,7 +96,7 @@ export class UserService {
     })
 
     if (!user) return null
-    return user
+    return this.sanitizeUser(user)
   }
 
   async updateUser(id: string, data: UpdateUserData) {
@@ -112,7 +106,7 @@ export class UserService {
       updateData.password = await hash(updateData.password, 10)
     }
 
-    const user = await db.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         ...updateData,
@@ -120,8 +114,6 @@ export class UserService {
           preferences: {
             upsert: {
               create: {
-                ...preferences,
-                theme: preferences.theme || 'system',
                 notifications: preferences.notifications ?? true,
                 handGestureDetection: preferences.handGestureDetection ?? true,
                 facialEmotionRecognition: preferences.facialEmotionRecognition ?? true,
@@ -139,8 +131,18 @@ export class UserService {
           security: {
             upsert: {
               create: {
-                ...security,
-                twoFactorEnabled: security.twoFactorEnabled ??
+                twoFactorEnabled: security.twoFactorEnabled ?? false,
+                lastPasswordChange: new Date(security.lastPasswordChange || Date.now()),
+                sessions: {
+                  create: []
+                }
+              },
+              update: {
+                twoFactorEnabled: security.twoFactorEnabled,
+                lastPasswordChange: security.lastPasswordChange ? new Date(security.lastPasswordChange) : undefined
+              }
+            }
+          }
         })
       },
       include: {
@@ -153,7 +155,7 @@ export class UserService {
   }
 
   async validatePassword(email: string, password: string) {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email }
     })
 
@@ -166,14 +168,14 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    await db.user.delete({
+    await prisma.user.delete({
       where: { id }
     })
   }
 
-  async updateUserPreferences(userId: string, preferences: Prisma.PreferencesUpdateInput) {
+  async updateUserPreferences(userId: string, preferences: Prisma.UserPreferencesUpdateInput) {
     try {
-      const updatedUser = await db.user.update({
+      const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
           preferences: {
@@ -191,9 +193,9 @@ export class UserService {
     }
   }
 
-  async updateUserSecurity(userId: string, security: Prisma.SecurityUpdateInput) {
+  async updateUserSecurity(userId: string, security: Prisma.UserSecurityUpdateInput) {
     try {
-      const updatedUser = await db.user.update({
+      const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
           security: {
@@ -201,11 +203,7 @@ export class UserService {
           }
         },
         include: {
-          security: {
-            include: {
-              sessions: true
-            }
-          }
+          security: true
         }
       })
       return updatedUser.security
@@ -217,17 +215,16 @@ export class UserService {
 
   async createDefaultDevUser() {
     try {
-      const user = await db.user.create({
+      const user = await prisma.user.create({
         data: {
           name: 'Development User',
           email: 'dev@example.com',
+          password: await hash('default-password', 10),
           avatar: '/placeholder-user.jpg',
-          role: 'Developer',
           bio: 'This is a development user account',
           location: 'Development',
           website: 'https://example.com',
           company: 'Dev Company',
-          joinDate: new Date().toISOString(),
           twitterHandle: '@devuser',
           githubHandle: 'devuser',
           linkedinHandle: 'devuser',
@@ -246,37 +243,34 @@ export class UserService {
           security: {
             create: {
               twoFactorEnabled: false,
-              lastPasswordChange: new Date().toISOString(),
+              lastPasswordChange: new Date(),
               sessions: {
-                create: [
-                  {
-                    device: 'Development Desktop',
-                    browser: 'Chrome',
-                    date: new Date().toISOString(),
-                    isActive: true
-                  }
-                ]
+                create: [{
+                  device: 'Development Desktop',
+                  browser: 'Chrome',
+                  isActive: true,
+                  date: new Date()
+                }]
               }
             }
           }
         },
         include: {
           preferences: true,
-          security: {
-            include: {
-              sessions: true
-            }
-          }
+          security: true
         }
       })
-      return user
+      return this.sanitizeUser(user)
     } catch (error) {
       console.error('Error in createDefaultDevUser:', error)
       throw new Error('Failed to create development user')
     }
   }
 
-  private sanitizeUser(user: any) {
+  private sanitizeUser(user: User & { 
+    preferences?: UserPreferences | null, 
+    security?: UserSecurity | null 
+  }) {
     const { password, ...sanitizedUser } = user
     return sanitizedUser
   }

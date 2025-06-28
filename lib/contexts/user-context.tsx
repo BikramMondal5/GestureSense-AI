@@ -28,10 +28,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (!userId && process.env.NODE_ENV === 'development') {
         // Trigger default user creation through the dev API
         const response = await fetch('/api/dev/seed', { method: 'POST' })
-        if (!response.ok) {
-          throw new Error('Failed to create development user')
-        }
         const data = await response.json()
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create development user')
+        }
         userId = data.id
       }
 
@@ -43,7 +44,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setUser(userData)
     } catch (err: any) {
       console.error('Failed to fetch user:', err)
-      setError(err?.message || 'Failed to load user data')
+      // Include more error details in development
+      const errorMessage = process.env.NODE_ENV === 'development' 
+        ? `${err.message} - ${err.stack}` 
+        : err.message
+      setError(errorMessage || 'Failed to load user data')
       setUser(null)
     } finally {
       setIsLoading(false)
