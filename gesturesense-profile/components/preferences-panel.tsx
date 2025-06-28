@@ -14,12 +14,35 @@ export function PreferencesPanel() {
     criticalAlerts: true,
     advancedAnalytics: false,
   })
+  const [isSaving, setIsSaving] = useState(false)
 
-  const handleToggle = (key: keyof typeof preferences) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }))
+  const handleToggle = async (key: keyof typeof preferences) => {
+    setIsSaving(true)
+    const newPreferences = {
+      ...preferences,
+      [key]: !preferences[key],
+    }
+
+    try {
+      const response = await fetch("/api/users/preferences", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ preferences: newPreferences }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update preferences")
+      }
+
+      setPreferences(newPreferences)
+    } catch (error) {
+      console.error("Error updating preferences:", error)
+      // Optionally show an error toast here
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const preferenceItems = [
@@ -81,7 +104,10 @@ export function PreferencesPanel() {
                     <p className="text-sm text-slate-400">{item.description}</p>
                   </div>
                 </div>
-                <ToggleSwitch checked={preferences[item.key]} onCheckedChange={() => handleToggle(item.key)} />
+                <ToggleSwitch
+                  checked={preferences[item.key]}
+                  onCheckedChange={() => handleToggle(item.key)}
+                />
               </div>
             </CardContent>
           </Card>

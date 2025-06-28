@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,36 +11,61 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  name        String?
-  password    String   // Hashed password
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  gestures    Gesture[]
-  preferences UserPreferences?
+  id            String      @id @default(cuid())
+  email         String      @unique
+  password      String
+  name          String?
+  avatar        String?
+  role          String?
+  bio           String?
+  location      String?
+  website       String?
+  company       String?
+  joinDate      DateTime    @default(now())
+  twitterHandle String?
+  githubHandle  String?
+  linkedinHandle String?
+  preferences   Preferences?
+  security      Security?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
-model Gesture {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  type        String   // e.g., "hand", "face", "body"
-  keyPoints   Json     // Store gesture keypoints data
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([userId])
+model Preferences {
+  id                      String  @id @default(cuid())
+  userId                  String  @unique
+  user                    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  handGestureDetection    Boolean @default(true)
+  facialEmotionRecognition Boolean @default(true)
+  speechRecognition       Boolean @default(true)
+  notifications           Boolean @default(true)
+  darkMode               Boolean @default(false)
+  highContrast           Boolean @default(false)
+  reducedMotion          Boolean @default(false)
+  language               String  @default("English")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }
 
-model UserPreferences {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id])
-  theme           String   @default("system") // "light", "dark", "system"
-  notifications   Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+model Security {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twoFactorEnabled  Boolean   @default(false)
+  lastPasswordChange DateTime @default(now())
+  sessions          Session[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  securityId String
+  security  Security @relation(fields: [securityId], references: [id], onDelete: Cascade)
+  device    String
+  browser   String
+  date      DateTime @default(now())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
