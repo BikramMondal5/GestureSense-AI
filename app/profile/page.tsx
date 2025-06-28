@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -13,7 +14,6 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
 import { 
@@ -263,374 +263,6 @@ function ActivitySummary({ activity }: Pick<ComponentProps, "activity">) {
   )
 }
 
-function PreferencesPanel({ preferences, onPreferenceChange }: Pick<ComponentProps, "preferences" | "onPreferenceChange">) {
-  const [localPreferences, setLocalPreferences] = useState(preferences)
-  const [isSaving, setIsSaving] = useState(false)
-
-  useEffect(() => {
-    setLocalPreferences(preferences)
-  }, [preferences])
-
-  const handleToggle = (key: keyof typeof localPreferences) => {
-    setLocalPreferences(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }))
-  }
-
-  const handleLanguageChange = (value: string) => {
-    setLocalPreferences(prev => ({
-      ...prev,
-      language: value
-    }))
-  }
-
-  const handleSavePreferences = async () => {
-    setIsSaving(true)
-    await onPreferenceChange(localPreferences)
-    setIsSaving(false)
-  }
-
-  return (
-    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-      <CardContent className="p-6">
-        <h3 className="text-lg font-medium text-white mb-6">System Preferences</h3>
-        
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Hand Gesture Detection</Label>
-              <p className="text-sm text-slate-400">Enable real-time hand gesture recognition</p>
-            </div>
-            <Switch
-              checked={localPreferences.handGestureDetection}
-              onCheckedChange={() => handleToggle('handGestureDetection')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Facial Emotion Recognition</Label>
-              <p className="text-sm text-slate-400">Enable real-time facial expression analysis</p>
-            </div>
-            <Switch
-              checked={localPreferences.facialEmotionRecognition}
-              onCheckedChange={() => handleToggle('facialEmotionRecognition')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Speech Recognition</Label>
-              <p className="text-sm text-slate-400">Enable voice commands and speech input</p>
-            </div>
-            <Switch
-              checked={localPreferences.speechRecognition}
-              onCheckedChange={() => handleToggle('speechRecognition')}
-            />
-          </div>
-
-          <Separator className="bg-slate-700" />
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Dark Mode</Label>
-              <p className="text-sm text-slate-400">Use dark color scheme</p>
-            </div>
-            <Switch
-              checked={localPreferences.darkMode}
-              onCheckedChange={() => handleToggle('darkMode')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">High Contrast</Label>
-              <p className="text-sm text-slate-400">Increase contrast for better visibility</p>
-            </div>
-            <Switch
-              checked={localPreferences.highContrast}
-              onCheckedChange={() => handleToggle('highContrast')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Reduced Motion</Label>
-              <p className="text-sm text-slate-400">Minimize animations and transitions</p>
-            </div>
-            <Switch
-              checked={localPreferences.reducedMotion}
-              onCheckedChange={() => handleToggle('reducedMotion')}
-            />
-          </div>
-
-          <Separator className="bg-slate-700" />
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-white">Notifications</Label>
-              <p className="text-sm text-slate-400">Enable system notifications</p>
-            </div>
-            <Switch
-              checked={localPreferences.notifications}
-              onCheckedChange={() => handleToggle('notifications')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-white">Language</Label>
-            <Select
-              value={localPreferences.language}
-              onValueChange={handleLanguageChange}
-            >
-              <SelectTrigger className="w-full bg-slate-800 border-slate-700">
-                <SelectValue placeholder="Select a language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">English</SelectItem>
-                <SelectItem value="Spanish">Spanish</SelectItem>
-                <SelectItem value="French">French</SelectItem>
-                <SelectItem value="German">German</SelectItem>
-                <SelectItem value="Chinese">Chinese</SelectItem>
-                <SelectItem value="Japanese">Japanese</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <Button
-            onClick={handleSavePreferences}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <>
-                <ComponentLoader size="sm" className="mr-2" />
-                Saving...
-              </>
-            ) : (
-              'Save Preferences'
-            )}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function SecuritySettings({ security, onSecurityChange }: Pick<ComponentProps, "security" | "onSecurityChange">) {
-  const [localSecurity, setLocalSecurity] = useState(security)
-  const [isSaving, setIsSaving] = useState(false)
-  const [currentPassword, setCurrentPassword] = useState("")
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [isRevokingSession, setIsRevokingSession] = useState<string | null>(null)
-  const { toast } = useToast()
-
-  useEffect(() => {
-    setLocalSecurity(security)
-  }, [security])
-
-  const handlePasswordChange = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      toast({
-        title: "Error",
-        description: "All password fields are required",
-        variant: "destructive"
-      })
-      return
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "New passwords do not match",
-        variant: "destructive"
-      })
-      return
-    }
-
-    setIsSaving(true)
-    try {
-      await onSecurityChange({
-        lastPasswordChange: new Date().toISOString()
-      }, 'password')
-      setCurrentPassword("")
-      setNewPassword("")
-      setConfirmPassword("")
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const handleTwoFactorToggle = async () => {
-    setIsSaving(true)
-    try {
-      await onSecurityChange({
-        twoFactorEnabled: !localSecurity.twoFactorEnabled
-      }, 'twoFactor')
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const handleRevokeSession = async (sessionDate: string) => {
-    setIsRevokingSession(sessionDate)
-    try {
-      const updatedSessions = localSecurity.sessions.map(session =>
-        session.date === sessionDate 
-          ? { ...session, isActive: false }
-          : session
-      )
-      await onSecurityChange({
-        sessions: updatedSessions
-      }, 'session')
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setIsRevokingSession(null)
-    }
-  }
-
-  return (
-    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-      <CardContent className="p-6">
-        <h3 className="text-lg font-medium text-white mb-6">Security Settings</h3>
-        
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-slate-300">Change Password</h4>
-            <div className="grid gap-4">
-              <div>
-                <Label htmlFor="currentPassword" className="text-xs text-slate-400 mb-1">Current Password</Label>
-                <Input 
-                  id="currentPassword"
-                  type="password" 
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-slate-700 text-white"
-                  placeholder="Enter your current password"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="newPassword" className="text-xs text-slate-400 mb-1">New Password</Label>
-                <Input 
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-slate-700 text-white"
-                  placeholder="Enter a new password"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="confirmPassword" className="text-xs text-slate-400 mb-1">Confirm New Password</Label>
-                <Input 
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-slate-700 text-white"
-                  placeholder="Confirm your new password"
-                />
-              </div>
-              
-              <Button
-                onClick={handlePasswordChange}
-                disabled={isSaving || !currentPassword || !newPassword || !confirmPassword}
-                className="w-fit"
-              >
-                {isSaving ? (
-                  <>
-                    <ComponentLoader size="sm" className="mr-2" />
-                    Updating Password...
-                  </>
-                ) : (
-                  <>
-                    <Key className="w-4 h-4 mr-2" />
-                    Update Password
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-          
-          <div className="space-y-4 pt-4 border-t border-slate-700">
-            <h4 className="text-sm font-medium text-slate-300">Two-Factor Authentication</h4>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-white">Enable 2FA</Label>
-                <p className="text-sm text-slate-400">Add an extra layer of security to your account</p>
-              </div>
-              <Switch
-                checked={localSecurity.twoFactorEnabled}
-                onCheckedChange={handleTwoFactorToggle}
-                disabled={isSaving}
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-4 pt-4 border-t border-slate-700">
-            <h4 className="text-sm font-medium text-slate-300">Active Sessions</h4>
-            <div className="space-y-2">
-              {localSecurity.sessions.map((session) => (
-                <div key={session.date} className="flex items-center justify-between p-3 bg-slate-900/30 rounded-md">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{session.device}</span>
-                      {session.isActive && (
-                        <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20">
-                          Current
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      <span>{session.browser}</span>
-                      <span className="mx-2">•</span>
-                      <span>Last active: {session.date}</span>
-                    </div>
-                  </div>
-                  {session.isActive ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRevokeSession(session.date)}
-                      disabled={isRevokingSession === session.date}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                    >
-                      {isRevokingSession === session.date ? (
-                        <ComponentLoader size="sm" />
-                      ) : (
-                        <>
-                          <Shield className="w-4 h-4 mr-2" />
-                          Revoke
-                        </>
-                      )}
-                    </Button>
-                  ) : (
-                    <Badge variant="outline" className="text-slate-400 border-slate-600">
-                      Inactive
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-// Avatar Upload Dialog Component
 function AvatarUploadDialog({ isOpen, onClose, onSave }: Pick<ComponentProps, "isOpen" | "onClose" | "onSave">) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -906,6 +538,183 @@ function EditProfileDialog({ isOpen, onClose, userData, onSave }: Pick<Component
   );
 }
 
+function PreferencesPanel({ preferences, onPreferenceChange }: Pick<ComponentProps, "preferences" | "onPreferenceChange">) {
+  const [isSaving, setIsSaving] = useState(false)
+  const { theme, setTheme } = useTheme()
+
+  const handleToggle = async (key: keyof Preferences, value: boolean) => {
+    if (key === 'darkMode') {
+      setTheme(value ? 'dark' : 'light')
+    }
+    onPreferenceChange({ ...preferences, [key]: value })
+  }
+
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <h3 className="text-xl font-semibold mb-6">Preferences</h3>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Dark Mode</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable dark mode for a better viewing experience in low light
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.darkMode}
+              onCheckedChange={(checked) => handleToggle('darkMode', checked)}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Hand Gesture Detection</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable hand gesture controls
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.handGestureDetection}
+              onCheckedChange={(checked) => handleToggle('handGestureDetection', checked)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Facial Emotion Recognition</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable facial emotion detection
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.facialEmotionRecognition}
+              onCheckedChange={(checked) => handleToggle('facialEmotionRecognition', checked)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Speech Recognition</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable voice commands
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.speechRecognition}
+              onCheckedChange={(checked) => handleToggle('speechRecognition', checked)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>High Contrast</Label>
+              <p className="text-sm text-muted-foreground">
+                Increase contrast for better visibility
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.highContrast}
+              onCheckedChange={(checked) => handleToggle('highContrast', checked)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Reduced Motion</Label>
+              <p className="text-sm text-muted-foreground">
+                Minimize animations and transitions
+              </p>
+            </div>
+            <Switch
+              checked={preferences?.reducedMotion}
+              onCheckedChange={(checked) => handleToggle('reducedMotion', checked)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Language</Label>
+            <Select
+              value={preferences?.language}
+              onValueChange={(value) => onPreferenceChange({ ...preferences, language: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="English">English</SelectItem>
+                <SelectItem value="Spanish">Spanish</SelectItem>
+                <SelectItem value="French">French</SelectItem>
+                <SelectItem value="German">German</SelectItem>
+                <SelectItem value="Chinese">Chinese</SelectItem>
+                <SelectItem value="Japanese">Japanese</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function SecuritySettings({ security, onSecurityChange }: Pick<ComponentProps, "security" | "onSecurityChange">) {
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <h3 className="text-xl font-semibold mb-6">Security Settings</h3>
+        
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Two-Factor Authentication</Label>
+                <p className="text-sm text-muted-foreground">
+                  Add an extra layer of security to your account
+                </p>
+              </div>
+              <Switch
+                checked={security?.twoFactorEnabled}
+                onCheckedChange={(checked) => 
+                  onSecurityChange({ ...security, twoFactorEnabled: checked }, 'twoFactor')
+                }
+              />
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-medium mb-4">Active Sessions</h4>
+            <div className="space-y-4">
+              {security?.sessions.map((session, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Smartphone className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">{session.device}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {session.browser} • Last active {new Date(session.date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  {session.isActive && (
+                    <Badge variant="secondary">Current Session</Badge>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-medium mb-4">Security History</h4>
+            <p className="text-sm text-muted-foreground">
+              Last password change: {new Date(security?.lastPasswordChange).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [activityData, setActivityData] = useState<Activity[]>(mockActivity)
@@ -919,15 +728,6 @@ export default function ProfilePage() {
   const { user: userData, isLoading, error, refreshUser } = useUser()
   const { toast } = useToast()
   const { theme, setTheme } = useTheme()
-
-  // Sync theme with user preferences on initial load
-  useEffect(() => {
-    if (userData?.preferences?.darkMode && theme !== "dark") {
-      setTheme("dark")
-    } else if (!userData?.preferences?.darkMode && theme !== "light") {
-      setTheme("light")
-    }
-  }, [userData?.preferences?.darkMode, theme, setTheme])
 
   // Handle loading states and error display
   if (isLoading) {
@@ -1010,12 +810,6 @@ export default function ProfilePage() {
       setIsSavingPreferences(true)
       await updateUserPreferences(userData.id, updatedPreferences)
       await refreshUser()
-      
-      // Sync theme if darkMode preference changed
-      if ('darkMode' in updatedPreferences) {
-        setTheme(updatedPreferences.darkMode ? 'dark' : 'light')
-      }
-      
       toast({
         title: "Preferences updated",
         description: "Your preferences have been updated successfully",
@@ -1057,77 +851,50 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <ProfileHeader
-          userData={userData}
-          onOpenEditDialog={() => setIsEditProfileDialogOpen(true)}
+    <div className="container py-10">
+      <Tabs defaultValue="overview" className="space-y-8">
+        <TabsList className="bg-card w-full justify-start rounded-none border-b">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="preferences">Preferences</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-8">
+          <UserInfoCard 
+            userData={userData} 
+            onAvatarClick={() => setIsAvatarDialogOpen(true)} 
+          />
+          <ActivitySummary activity={activityData} />
+        </TabsContent>
+
+        <TabsContent value="preferences">
+          <PreferencesPanel
+            preferences={userData?.preferences}
+            onPreferenceChange={handlePreferenceChange}
+          />
+        </TabsContent>
+
+        <TabsContent value="security">
+          <SecuritySettings
+            security={userData?.security}
+            onSecurityChange={handleSecurityChange}
+          />
+        </TabsContent>
+
+        {/* Dialogs */}
+        <AvatarUploadDialog
+          isOpen={isAvatarDialogOpen}
+          onClose={() => setIsAvatarDialogOpen(false)}
+          onSave={handleAvatarChange}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50">
-            <TabsTrigger
-              value="overview"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white"
-            >
-              Overview
-            </TabsTrigger>
-            <TabsTrigger
-              value="preferences"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white"
-            >
-              Preferences
-            </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white"
-            >
-              Security
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6 mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-1">
-                <UserInfoCard
-                  userData={userData}
-                  onAvatarClick={() => setIsAvatarDialogOpen(true)}
-                />
-              </div>
-              <div className="lg:col-span-2">
-                <ActivitySummary activity={activityData} />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="preferences" className="mt-6">
-            <PreferencesPanel
-              preferences={userData.preferences}
-              onPreferenceChange={handlePreferenceChange}
-            />
-          </TabsContent>
-
-          <TabsContent value="security" className="mt-6">
-            <SecuritySettings
-              security={userData.security}
-              onSecurityChange={handleSecurityChange}
-            />
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      <AvatarUploadDialog
-        isOpen={isAvatarDialogOpen}
-        onClose={() => setIsAvatarDialogOpen(false)}
-        onSave={handleAvatarChange}
-      />
-
-      <EditProfileDialog
-        isOpen={isEditProfileDialogOpen}
-        onClose={() => setIsEditProfileDialogOpen(false)}
-        userData={userData}
-        onSave={handleProfileUpdate}
-      />
+        <EditProfileDialog
+          isOpen={isEditProfileDialogOpen}
+          onClose={() => setIsEditProfileDialogOpen(false)}
+          userData={userData}
+          onSave={handleProfileUpdate}
+        />
+      </Tabs>
     </div>
   )
 }
