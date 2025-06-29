@@ -9,10 +9,10 @@ A real-time, AI-powered web application that detects **hand gestures**, **facial
 * 🖐️ Real-time **hand gesture detection** (thumbs up, peace, OK, stop, etc.)
 * 😀 Instant **facial emotion recognition** (happy, sad, angry, surprised, neutral)
 * 🎤 **Speech command recognition** for voice-based interactions
-* 🖼️ Upload your photo to test gestures and emotions
-* 📷 Webcam-based live gesture detection
+* 🖼️ Upload your photo to **test gestures and emotions**
+* 📷 Webcam-based **live gesture detection**
 * 🧠 Built using modern ML tools like **MediaPipe**, **TensorFlow**, and **OpenCV**
-* 🔒 100% client-side — no image, video, or audio is uploaded to a server
+* 🔒 **100% client-side** — no image, video, or audio is uploaded to a server
 
 ## 🛠️ Technologies Used
 
@@ -38,20 +38,32 @@ cd GestureSense-AI
 
 3. Install dependencies:
 ```bash
-pnpm install
+npm install
 ```
-
+or 
+```bash
+npm install --legacy-peer-deps
+```
 4. Start the development server:
 ```bash
-pnpm dev
+npm run dev
 ```
 
 ## 🚀 How to Use
 
-1. 📂 Select one or multiple JPG/PNG files.
-2. 📏 Choose the desired page size and orientation (landscape/portrait).
-3. 🔘 Click the **Convert to PDF** button.
-4. 📥 Download the generated PDF file instantly.
+1. Open the application in your browser after starting the development server.
+2. Allow access to your webcam and microphone when prompted.
+3. Use the following features:
+   - **Hand Gesture Detection**: Perform gestures like thumbs up, peace, or stop in front of the webcam.
+   - **Facial Emotion Recognition**: Express emotions like happy, sad, or surprised for instant recognition.
+   - **Speech Command Recognition**: Speak commands like "start", "stop", or "help" to interact with the application.
+4. Optionally, upload a photo to test gesture and emotion detection on static images.
+5. Explore the results displayed in real-time on the screen.
+6. Create a `.env` file in the root directory by copying `.env.example`:
+```bash
+cp .env.example .env
+```
+7. Update the `POSTGRES_PASSWORD` field in the `.env` file with your PostgreSQL password.
 
 ## 🤝 Contribution
 
