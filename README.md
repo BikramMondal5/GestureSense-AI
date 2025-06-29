@@ -1,15 +1,16 @@
 # 🧠🖐️ GestureSense AI
 
-A real-time, AI-powered web application that detects **hand gestures** and **facial emotions** directly from your webcam or uploaded photo — all in your browser. Fast, accurate, and privacy-respecting.
+A real-time, AI-powered web application that detects **hand gestures**, **facial emotions**, and **speech commands** directly from your webcam or uploaded photo — all in your browser. Fast, accurate, and privacy-respecting.
 
 ## 🌟 Features
 
 * 🖐️ Real-time **hand gesture detection** (thumbs up, peace, OK, stop, etc.)
 * 😀 Instant **facial emotion recognition** (happy, sad, angry, surprised, neutral)
+* 🎤 **Speech command recognition** for voice-based interactions
 * 🖼️ Upload your photo to test gestures and emotions
 * 📷 Webcam-based live gesture detection
 * 🧠 Built using modern ML tools like **MediaPipe**, **TensorFlow**, and **OpenCV**
-* 🔒 100% client-side — no image or video is uploaded to a server
+* 🔒 100% client-side — no image, video, or audio is uploaded to a server
 
 ## 🛠️ Technologies Used
 
@@ -19,6 +20,7 @@ A real-time, AI-powered web application that detects **hand gestures** and **fac
 * **TensorFlow.js** – For facial emotion classification  
 * **MediaPipe** – For hand and face landmark tracking  
 * **OpenCV.js** – Image preprocessing and camera feed handling
+* **Web Speech API** – For speech recognition
 
 ## ⚙️ Installation
 
@@ -32,10 +34,18 @@ git clone https://github.com/BikramMondal5/GestureSense-AI.git
 cd GestureSense-AI
 ```
 
-3. Open the `index.html` file in your browser
+3. Install dependencies:
+```bash
+pnpm install
+```
+
+4. Start the development server:
+```bash
+pnpm dev
+```
 
 ## 📸 Screenshot
-![Preview Image](Monica_2025-03-23_12-41-52.png)
+![Preview Image](public/Landing-page.png)
 
 ## 🚀 How to Use
 
