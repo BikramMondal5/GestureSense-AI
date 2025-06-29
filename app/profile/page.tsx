@@ -41,7 +41,8 @@ import {
   Save,
   RefreshCw,
   X,
-  Upload
+  Upload,
+  Activity
 } from "lucide-react"
 import { getUserProfile, updateUserProfile, updateUserPreferences, updateUserSecurity } from "@/lib/utils"
 import { useUser } from "@/lib/contexts/user-context"
@@ -160,16 +161,16 @@ function UserInfoCard({ userData, onAvatarClick }: Pick<ComponentProps, "userDat
       <CardContent className="p-6">
         <div className="flex flex-col items-center text-center">
           <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-            <Avatar className="w-24 h-24 relative border-2 border-slate-600" onClick={onAvatarClick}>
-              <AvatarImage src={userData.avatar} alt="Profile" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+            <Avatar className="w-24 h-24 relative border-2 border-slate-600 hover:border-blue-400 transition-colors duration-300" onClick={onAvatarClick}>
+              <AvatarImage src={userData.avatar} alt="Profile" className="object-cover" />
               <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xl font-bold">
-                BM
+                AI
               </AvatarFallback>
             </Avatar>
           </div>
 
-          <Button variant="ghost" size="sm" className="mt-3 text-slate-400 hover:text-white hover:bg-slate-700/50">
+          <Button variant="ghost" size="sm" className="mt-3 text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors duration-300">
             <Camera className="w-4 h-4 mr-2" />
             Change Avatar
           </Button>
@@ -178,21 +179,21 @@ function UserInfoCard({ userData, onAvatarClick }: Pick<ComponentProps, "userDat
         <div className="mt-6 space-y-4">
           <div>
             <h3 className="text-xl font-semibold text-white">{userData.name}</h3>
-            <Badge className="mt-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white">{userData.role}</Badge>
+            <Badge className="mt-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none">{userData.role}</Badge>
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-slate-300">
+            <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
               <Mail className="w-4 h-4 text-blue-400" />
               <span className="text-sm">{userData.email}</span>
             </div>
 
-            <div className="flex items-center gap-3 text-slate-300">
+            <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
               <Calendar className="w-4 h-4 text-blue-400" />
               <span className="text-sm">Joined {userData.joinDate}</span>
             </div>
 
-            <div className="flex items-center gap-3 text-slate-300">
+            <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
               <Zap className="w-4 h-4 text-blue-400" />
               <span className="text-sm">{userData.mode} Mode</span>
             </div>
@@ -200,11 +201,11 @@ function UserInfoCard({ userData, onAvatarClick }: Pick<ComponentProps, "userDat
 
           <div className="pt-4 border-t border-slate-700/50">
             <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
+              <div className="hover:transform hover:scale-105 transition-transform duration-300">
                 <div className="text-2xl font-bold text-white">{userData.sessions}</div>
                 <div className="text-xs text-slate-400">Sessions</div>
               </div>
-              <div>
+              <div className="hover:transform hover:scale-105 transition-transform duration-300">
                 <div className="text-2xl font-bold text-white">{userData.accuracy}%</div>
                 <div className="text-xs text-slate-400">Accuracy</div>
               </div>
@@ -220,7 +221,10 @@ function ActivitySummary({ activity }: Pick<ComponentProps, "activity">) {
   return (
     <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
       <CardContent className="p-6">
-        <h3 className="text-lg font-medium text-white mb-4">Recent Activity</h3>
+        <h3 className="text-lg font-medium text-white mb-4 flex items-center">
+          <Activity className="w-5 h-5 mr-2 text-blue-400" />
+          Recent Activity
+        </h3>
         
         <div className="space-y-4">
           {activity.map((activity) => (
@@ -851,50 +855,191 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container py-10">
-      <Tabs defaultValue="overview" className="space-y-8">
-        <TabsList className="bg-card w-full justify-start rounded-none border-b">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="preferences">Preferences</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-        </TabsList>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-sky-500/5 to-indigo-500/5" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
+      </div>
 
-        <TabsContent value="overview" className="space-y-8">
-          <UserInfoCard 
-            userData={userData} 
-            onAvatarClick={() => setIsAvatarDialogOpen(true)} 
-          />
-          <ActivitySummary activity={activityData} />
-        </TabsContent>
+      <div className="container mx-auto px-4 py-8 relative">
+        <div className="max-w-6xl mx-auto space-y-8">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-1">
+              <TabsTrigger
+                value="overview"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg transition-all duration-300"
+              >
+                Overview
+              </TabsTrigger>
+              <TabsTrigger
+                value="preferences"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg transition-all duration-300"
+              >
+                Preferences
+              </TabsTrigger>
+              <TabsTrigger
+                value="security"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg transition-all duration-300"
+              >
+                Security
+              </TabsTrigger>
+            </TabsList>
 
-        <TabsContent value="preferences">
-          <PreferencesPanel
-            preferences={userData?.preferences}
-            onPreferenceChange={handlePreferenceChange}
-          />
-        </TabsContent>
+            <TabsContent value="overview" className="space-y-6 mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-1">
+                  <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+                    <CardContent className="p-6">
+                      <div className="flex flex-col items-center text-center">
+                        <div className="relative group cursor-pointer">
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                          <Avatar className="w-24 h-24 relative border-2 border-slate-600 hover:border-blue-400 transition-colors duration-300" onClick={() => setIsAvatarDialogOpen(true)}>
+                            <AvatarImage src={userData.avatar} alt="Profile" className="object-cover" />
+                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xl font-bold">
+                              AI
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
 
-        <TabsContent value="security">
-          <SecuritySettings
-            security={userData?.security}
-            onSecurityChange={handleSecurityChange}
-          />
-        </TabsContent>
+                        <Button variant="ghost" size="sm" className="mt-3 text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors duration-300">
+                          <Camera className="w-4 h-4 mr-2" />
+                          Change Avatar
+                        </Button>
+                      </div>
 
-        {/* Dialogs */}
-        <AvatarUploadDialog
-          isOpen={isAvatarDialogOpen}
-          onClose={() => setIsAvatarDialogOpen(false)}
-          onSave={handleAvatarChange}
-        />
+                      <div className="mt-6 space-y-4">
+                        <div>
+                          <h3 className="text-xl font-semibold text-white">{userData.name}</h3>
+                          <Badge className="mt-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none">{userData.role}</Badge>
+                        </div>
 
-        <EditProfileDialog
-          isOpen={isEditProfileDialogOpen}
-          onClose={() => setIsEditProfileDialogOpen(false)}
-          userData={userData}
-          onSave={handleProfileUpdate}
-        />
-      </Tabs>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
+                            <Mail className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm">{userData.email}</span>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
+                            <Calendar className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm">Joined {userData.joinDate}</span>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors duration-300">
+                            <Zap className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm">{userData.mode} Mode</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-4 border-t border-slate-700/50">
+                          <div className="grid grid-cols-2 gap-4 text-center">
+                            <div className="hover:transform hover:scale-105 transition-transform duration-300">
+                              <div className="text-2xl font-bold text-white">{userData.sessions}</div>
+                              <div className="text-xs text-slate-400">Sessions</div>
+                            </div>
+                            <div className="hover:transform hover:scale-105 transition-transform duration-300">
+                              <div className="text-2xl font-bold text-white">{userData.accuracy}%</div>
+                              <div className="text-xs text-slate-400">Accuracy</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+                    <CardContent className="p-6">
+                      <h3 className="text-lg font-medium text-white mb-4 flex items-center">
+                        <Activity className="w-5 h-5 mr-2 text-blue-400" />
+                        Recent Activity
+                      </h3>
+                      
+                      <div className="space-y-4">
+                        {activityData.map((activity) => (
+                          <div key={activity.id} className="flex items-start gap-4 border-b border-slate-700/50 pb-4">
+                            <div className={`w-2 h-2 mt-2 rounded-full ${
+                              activity.type === "gesture" ? "bg-green-500" : activity.type === "emotion" ? "bg-blue-500" : "bg-purple-500"
+                            }`}></div>
+                            <div>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className="text-white text-sm font-medium">
+                                  {activity.type === "gesture" 
+                                    ? "Detected hand gesture" 
+                                    : activity.type === "emotion" 
+                                      ? "Recognized facial emotion" 
+                                      : "Speech recognition enabled"}
+                                </p>
+                                <Badge variant="outline" className="text-xs text-slate-400 border-slate-700">
+                                  {activity.type === "gesture" 
+                                    ? "👋 Wave" 
+                                    : activity.type === "emotion" 
+                                      ? "😊 Happy" 
+                                      : "🎤 Voice"}
+                                </Badge>
+                              </div>
+                              <p className="text-xs text-slate-400 mt-1">
+                                {`${Math.floor((Date.now() - activity.timestamp.getTime()) / 3600000)} hour${Math.floor((Date.now() - activity.timestamp.getTime()) / 3600000) === 1 ? '' : 's'} ago`} • Confidence: {activity.confidence}%
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-4 text-center">
+                        <Button variant="link" className="text-blue-400 hover:text-blue-300">
+                          View All Activity
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="preferences" className="mt-6">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+                <CardContent className="p-6">
+                  {/* Preferences content here */}
+                  <PreferencesPanel
+                    preferences={userData?.preferences}
+                    onPreferenceChange={handlePreferenceChange}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="security" className="mt-6">
+              <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+                <CardContent className="p-6">
+                  {/* Security content here */}
+                  <SecuritySettings
+                    security={userData?.security}
+                    onSecurityChange={handleSecurityChange}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+      {/* Dialogs */}
+      <AvatarUploadDialog
+        isOpen={isAvatarDialogOpen}
+        onClose={() => setIsAvatarDialogOpen(false)}
+        onSave={handleAvatarChange}
+      />
+
+      <EditProfileDialog
+        isOpen={isEditProfileDialogOpen}
+        onClose={() => setIsEditProfileDialogOpen(false)}
+        userData={userData}
+        onSave={handleProfileUpdate}
+      />
     </div>
   )
 }

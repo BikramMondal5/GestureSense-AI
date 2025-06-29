@@ -63,7 +63,7 @@ npm run dev
 ```bash
 cp .env.example .env
 ```
-7. Update the `POSTGRES_PASSWORD` field in the `.env` file with your PostgreSQL password.
+7. Rename the `.env.example` file to `.env` and update the `POSTGRES_PASSWORD` field in the file with your PostgreSQL password.
 
 ## 🤝 Contribution
 
