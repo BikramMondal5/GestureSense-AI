@@ -1,5 +1,7 @@
 # 🧠🖐️ GestureSense AI
 
+![Preview Image](public/Landing-page.png)
+
 A real-time, AI-powered web application that detects **hand gestures**, **facial emotions**, and **speech commands** directly from your webcam or uploaded photo — all in your browser. Fast, accurate, and privacy-respecting.
 
 ## 🌟 Features
@@ -43,9 +45,6 @@ pnpm install
 ```bash
 pnpm dev
 ```
-
-## 📸 Screenshot
-![Preview Image](public/Landing-page.png)
 
 ## 🚀 How to Use
 
